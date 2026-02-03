@@ -5,9 +5,11 @@ import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.entities.Product;
 import com.estudosjava.curso.repositories.CategoryRepository;
 import com.estudosjava.curso.repositories.ProductRepository;
+import com.estudosjava.curso.services.exceptions.DatabaseException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,6 +71,17 @@ public class ProductService {
 
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
+        }
+    }
+
+    public void delete(Long id){
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
         }
     }
 }
