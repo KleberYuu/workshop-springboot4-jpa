@@ -3,6 +3,7 @@ package com.estudosjava.curso.services;
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +22,9 @@ public class CategoryService {
     public Category findById(Long id){
         Optional<Category> obj = repository.findById(id);
         return obj.get();
+    }
+
+    public Category insert(Category obj){
+        return repository.save(obj);
     }
 }
