@@ -42,4 +42,10 @@ public class ProductResource {
 
         return ResponseEntity.created(uri).body(product);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductDTO dto){
+        Product obj = service.update(id, dto);
+        return ResponseEntity.ok().body(obj);
+    }
 }

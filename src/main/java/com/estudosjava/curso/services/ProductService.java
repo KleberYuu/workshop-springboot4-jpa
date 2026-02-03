@@ -6,6 +6,7 @@ import com.estudosjava.curso.entities.Product;
 import com.estudosjava.curso.repositories.CategoryRepository;
 import com.estudosjava.curso.repositories.ProductRepository;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,28 @@ public class ProductService {
         }
 
         return repository.save(product);
+    }
+
+    public Product update(Long id, ProductDTO dto){
+        try {
+            Product product = repository.getReferenceById(id);
+            product.setName(dto.getName());
+            product.setDescription(dto.getDescription());
+            product.setPrice(dto.getPrice());
+            product.setImgUrl(dto.getImgUrl());
+
+            product.getCategories().clear();
+            for (Long catId : dto.getCategoryIds()) {
+                Category category = categoryRepository
+                        .findById(catId)
+                        .orElseThrow(() -> new ResourceNotFoundException(catId));
+
+                product.getCategories().add(category);
+            }
+            return repository.save(product);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 }
