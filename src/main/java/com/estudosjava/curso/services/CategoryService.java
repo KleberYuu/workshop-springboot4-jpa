@@ -2,9 +2,11 @@ package com.estudosjava.curso.services;
 
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.repositories.CategoryRepository;
+import com.estudosjava.curso.services.exceptions.DatabaseException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,17 @@ public class CategoryService {
             return repository.save(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
+        }
+    }
+
+    public void delete(Long id){
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
         }
     }
 }
