@@ -1,32 +1,15 @@
 package com.estudosjava.curso.dto;
 
-import com.estudosjava.curso.entities.enums.OrderStatus;
-
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDTO {
 
-    private Instant moment;
-    private OrderStatus orderStatus;
     private Long clientId;
 
+    private List<OrderItemDTO> items = new ArrayList<>();
+
     public OrderDTO() {}
-
-    public Instant getMoment() {
-        return moment;
-    }
-
-    public void setMoment(Instant moment) {
-        this.moment = moment;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
 
     public Long getClientId() {
         return clientId;
@@ -34,5 +17,9 @@ public class OrderDTO {
 
     public void setClientId(Long clientId) {
         this.clientId = clientId;
+    }
+
+    public List<OrderItemDTO> getItems() {
+        return items;
     }
 }

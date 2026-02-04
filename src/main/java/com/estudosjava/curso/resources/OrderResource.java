@@ -24,7 +24,6 @@ public class OrderResource {
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> findAll() {
         List<Order> list = service.findAll();
-
         List<OrderResponseDTO> dtoList = list.stream()
                 .map(OrderResponseDTO::new)
                 .toList();
@@ -35,7 +34,6 @@ public class OrderResource {
     @GetMapping(value = "/{id}")
     public ResponseEntity<OrderResponseDTO> findById(@PathVariable Long id){
         Order order = service.findById(id);
-
         return ResponseEntity.ok().body(new OrderResponseDTO(order));
     }
 

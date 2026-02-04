@@ -1,9 +1,12 @@
 package com.estudosjava.curso.dto;
 
 import com.estudosjava.curso.entities.Order;
+import com.estudosjava.curso.entities.OrderItem;
 import com.estudosjava.curso.entities.enums.OrderStatus;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderResponseDTO {
 
@@ -13,11 +16,25 @@ public class OrderResponseDTO {
 
     private UserMinDTO client;
 
+    private List<OrderItemResponseDTO> items = new ArrayList<>();
+
     public OrderResponseDTO(Order order) {
         id = order.getId();
         moment = order.getMoment();
         orderStatus = order.getOrderStatus();
         client = new UserMinDTO(order.getClient());
+
+        for (OrderItem item : order.getItems()) {
+            items.add(new OrderItemResponseDTO(item));
+        }
+    }
+
+    public Double getTotal(){
+        double sum = 0.0;
+        for (OrderItemResponseDTO x : items){
+            sum += x.getSubTotal();
+        }
+        return sum;
     }
 
     public Long getId() {
@@ -50,5 +67,9 @@ public class OrderResponseDTO {
 
     public void setClient(UserMinDTO client) {
         this.client = client;
+    }
+
+    public List<OrderItemResponseDTO> getItems() {
+        return items;
     }
 }
