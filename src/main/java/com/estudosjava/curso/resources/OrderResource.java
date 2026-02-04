@@ -1,15 +1,17 @@
 package com.estudosjava.curso.resources;
 
 
+import com.estudosjava.curso.dto.OrderDTO;
+import com.estudosjava.curso.dto.OrderResponseDTO;
 import com.estudosjava.curso.entities.Order;
 import com.estudosjava.curso.services.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,14 +22,34 @@ public class OrderResource {
     private OrderService service;
 
     @GetMapping
-    public ResponseEntity<List<Order>> findAll() {
+    public ResponseEntity<List<OrderResponseDTO>> findAll() {
         List<Order> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+
+        List<OrderResponseDTO> dtoList = list.stream()
+                .map(OrderResponseDTO::new)
+                .toList();
+
+        return ResponseEntity.ok().body(dtoList);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Order> findById(@PathVariable Long id){
-        Order obj = service.findById(id);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<OrderResponseDTO> findById(@PathVariable Long id){
+        Order order = service.findById(id);
+
+        return ResponseEntity.ok().body(new OrderResponseDTO(order));
+    }
+
+    @PostMapping
+    public ResponseEntity<OrderResponseDTO> insert(@RequestBody OrderDTO dto){
+        Order order = service.insert(dto);
+        OrderResponseDTO response = new OrderResponseDTO(order);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(order.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(response);
+
     }
 }
