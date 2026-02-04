@@ -1,5 +1,6 @@
 package com.estudosjava.curso.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDTO {
@@ -8,7 +9,7 @@ public class ProductDTO {
     private String description;
     private Double price;
     private String imgUrl;
-    private List<Long> categoryIds;
+    private List<Long> categoryIds = new ArrayList<>();
 
     public ProductDTO() {}
 
@@ -46,5 +47,9 @@ public class ProductDTO {
 
     public List<Long> getCategoryIds() {
         return categoryIds;
+    }
+
+    public void setCategoryIds(List<Long> categoryIds) {
+        this.categoryIds = categoryIds;
     }
 }
