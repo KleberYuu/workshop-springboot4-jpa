@@ -12,6 +12,7 @@ import com.estudosjava.curso.repositories.OrderItemRepository;
 import com.estudosjava.curso.repositories.OrderRepository;
 import com.estudosjava.curso.repositories.ProductRepository;
 import com.estudosjava.curso.repositories.UserRepository;
+import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,10 @@ public class OrderService {
 
     public Order insert(OrderDTO dto){
 
+        if (dto.getItems() == null || dto.getItems().isEmpty()) {
+            throw new BusinessException("Order must have at least one item");
+        }
+
         User user = userRepository.findById(dto.getClientId()).orElseThrow(() -> new ResourceNotFoundException(dto.getClientId()));
 
         Order order = new Order();
@@ -58,7 +63,7 @@ public class OrderService {
         order.setMoment(Instant.now());
         order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
 
-        repository.save(order);
+        order = repository.save(order);
 
         for (OrderItemDTO itemDto : dto.getItems()){
 
@@ -71,6 +76,8 @@ public class OrderService {
                     itemDto.getQuantity(),
                     product.getPrice()
             );
+
+            order.getItems().add(item);
 
             orderItemRepository.save(item);
         }

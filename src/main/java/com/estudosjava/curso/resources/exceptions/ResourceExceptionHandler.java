@@ -1,5 +1,6 @@
 package com.estudosjava.curso.resources.exceptions;
 
+import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.DatabaseException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import com.sun.net.httpserver.HttpsServer;
@@ -25,6 +26,15 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request){
         String error = "Database error";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<StandardError> handleBusiness(BusinessException e, HttpServletRequest request) {
+
+        String error = "Business rule violation";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
