@@ -3,6 +3,7 @@ package com.estudosjava.curso.resources;
 
 import com.estudosjava.curso.dto.OrderDTO;
 import com.estudosjava.curso.dto.OrderResponseDTO;
+import com.estudosjava.curso.dto.OrderStatusDTO;
 import com.estudosjava.curso.entities.Order;
 import com.estudosjava.curso.services.OrderService;
 import org.aspectj.weaver.ast.Or;
@@ -48,6 +49,11 @@ public class OrderResource {
                 .toUri();
 
         return ResponseEntity.created(uri).body(response);
+    }
 
+    @PutMapping(value = "/{id}/status")
+    public ResponseEntity<OrderResponseDTO> updateStatus(@PathVariable Long id, @RequestBody OrderStatusDTO dto){
+        Order order = service.updateStatus(id, dto);
+        return ResponseEntity.ok().body(new OrderResponseDTO(order));
     }
 }
