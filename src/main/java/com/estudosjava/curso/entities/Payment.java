@@ -12,7 +12,6 @@ import java.util.Objects;
 public class Payment implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Instant moment;
 
@@ -22,6 +21,11 @@ public class Payment implements Serializable {
     private Order order;
 
     public Payment() {
+    }
+
+    public Payment(Instant moment, Order order) {
+        this.moment = moment;
+        this.order = order;
     }
 
     public Long getId() {
@@ -44,11 +48,6 @@ public class Payment implements Serializable {
         this.order = order;
     }
 
-    public Payment(Long id, Order order, Instant moment) {
-        this.id = id;
-        this.order = order;
-        this.moment = moment;
-    }
 
     @Override
     public boolean equals(Object o) {

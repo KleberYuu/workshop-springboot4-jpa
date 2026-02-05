@@ -6,7 +6,6 @@ import com.estudosjava.curso.dto.OrderResponseDTO;
 import com.estudosjava.curso.dto.OrderStatusDTO;
 import com.estudosjava.curso.entities.Order;
 import com.estudosjava.curso.services.OrderService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +53,12 @@ public class OrderResource {
     @PutMapping(value = "/{id}/status")
     public ResponseEntity<OrderResponseDTO> updateStatus(@PathVariable Long id, @RequestBody OrderStatusDTO dto){
         Order order = service.updateStatus(id, dto);
+        return ResponseEntity.ok().body(new OrderResponseDTO(order));
+    }
+
+    @PutMapping(value = "/{id}/pay")
+    public ResponseEntity<OrderResponseDTO> pay(@PathVariable Long id){
+        Order order = service.pay(id);
         return ResponseEntity.ok().body(new OrderResponseDTO(order));
     }
 }

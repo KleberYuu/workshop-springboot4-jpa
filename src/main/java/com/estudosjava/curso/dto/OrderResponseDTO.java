@@ -18,6 +18,8 @@ public class OrderResponseDTO {
 
     private List<OrderItemResponseDTO> items = new ArrayList<>();
 
+    private PaymentResponseDTO payment;
+
     public OrderResponseDTO(Order order) {
         id = order.getId();
         moment = order.getMoment();
@@ -26,6 +28,10 @@ public class OrderResponseDTO {
 
         for (OrderItem item : order.getItems()) {
             items.add(new OrderItemResponseDTO(item));
+        }
+
+        if (order.getPayment() != null) {
+            this.payment = new PaymentResponseDTO(order.getPayment());
         }
     }
 
@@ -71,5 +77,13 @@ public class OrderResponseDTO {
 
     public List<OrderItemResponseDTO> getItems() {
         return items;
+    }
+
+    public PaymentResponseDTO getPayment() {
+        return payment;
+    }
+
+    public void setPayment(PaymentResponseDTO payment) {
+        this.payment = payment;
     }
 }

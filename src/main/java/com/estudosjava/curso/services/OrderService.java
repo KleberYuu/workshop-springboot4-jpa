@@ -3,10 +3,7 @@ package com.estudosjava.curso.services;
 import com.estudosjava.curso.dto.OrderDTO;
 import com.estudosjava.curso.dto.OrderItemDTO;
 import com.estudosjava.curso.dto.OrderStatusDTO;
-import com.estudosjava.curso.entities.Order;
-import com.estudosjava.curso.entities.OrderItem;
-import com.estudosjava.curso.entities.Product;
-import com.estudosjava.curso.entities.User;
+import com.estudosjava.curso.entities.*;
 import com.estudosjava.curso.entities.enums.OrderStatus;
 import com.estudosjava.curso.repositories.OrderItemRepository;
 import com.estudosjava.curso.repositories.OrderRepository;
@@ -16,11 +13,7 @@ import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
 import java.util.List;
@@ -91,6 +84,29 @@ public class OrderService {
             return repository.save(order);
 
         }  catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    public Order pay(Long id){
+        try {
+            Order order = repository.getReferenceById(id);
+
+            if(order.getItems().isEmpty()){
+                throw new BusinessException("Cannot pay an order with no items");
+            }
+
+            if (order.getPayment() != null) {
+                throw new BusinessException("Order already paid");
+            }
+
+            Payment payment = new Payment(Instant.now(), order);
+
+            order.setPayment(payment);
+            order.setOrderStatus(OrderStatus.PAID);
+
+            return repository.save(order);
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
