@@ -50,15 +50,27 @@ public class OrderResource {
         return ResponseEntity.created(uri).body(response);
     }
 
-    @PutMapping(value = "/{id}/status")
-    public ResponseEntity<OrderResponseDTO> updateStatus(@PathVariable Long id, @RequestBody OrderStatusDTO dto){
-        Order order = service.updateStatus(id, dto);
-        return ResponseEntity.ok().body(new OrderResponseDTO(order));
-    }
-
     @PutMapping(value = "/{id}/pay")
     public ResponseEntity<OrderResponseDTO> pay(@PathVariable Long id){
         Order order = service.pay(id);
+        return ResponseEntity.ok().body(new OrderResponseDTO(order));
+    }
+
+    @PutMapping(value = "/{id}/cancel")
+    public ResponseEntity<OrderResponseDTO> cancel(@PathVariable Long id){
+        Order order = service.cancel(id);
+        return ResponseEntity.ok().body(new OrderResponseDTO(order));
+    }
+
+    @PutMapping(value = "/{id}/ship")
+    public ResponseEntity<OrderResponseDTO> ship(@PathVariable Long id){
+        Order order = service.ship(id);
+        return ResponseEntity.ok().body(new OrderResponseDTO(order));
+    }
+
+    @PutMapping(value = "/{id}/deliver")
+    public ResponseEntity<OrderResponseDTO> deliver(@PathVariable Long id){
+        Order order = service.deliver(id);
         return ResponseEntity.ok().body(new OrderResponseDTO(order));
     }
 }

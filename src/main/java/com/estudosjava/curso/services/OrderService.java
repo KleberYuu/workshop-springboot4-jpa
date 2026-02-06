@@ -12,6 +12,7 @@ import com.estudosjava.curso.repositories.UserRepository;
 import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,37 +78,75 @@ public class OrderService {
         return order;
     }
 
-    public Order updateStatus(Long id, OrderStatusDTO dto){
-        try {
-            Order order = repository.getReferenceById(id);
-            order.setOrderStatus(dto.getStatus());
-            return repository.save(order);
+    public Order pay(Long id){
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        }  catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
+        if(order.getItems().isEmpty()){
+            throw new BusinessException("Cannot pay an order with no items");
         }
+
+        if (order.getPayment() != null) {
+            throw new BusinessException("Order already paid");
+        }
+
+        if (order.getOrderStatus() == OrderStatus.CANCELED){
+            throw new BusinessException("Order cannot be PAID in this status " + order.getOrderStatus());
+        }
+
+        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT){
+            throw new BusinessException("Order cannot be PAID in this status " + order.getOrderStatus());
+        }
+
+        Payment payment = new Payment(Instant.now(), order);
+        order.setPayment(payment);
+        order.setOrderStatus(OrderStatus.PAID);
+
+        return repository.save(order);
     }
 
-    public Order pay(Long id){
-        try {
-            Order order = repository.getReferenceById(id);
+    public Order cancel(Long id){
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
-            if(order.getItems().isEmpty()){
-                throw new BusinessException("Cannot pay an order with no items");
-            }
-
-            if (order.getPayment() != null) {
-                throw new BusinessException("Order already paid");
-            }
-
-            Payment payment = new Payment(Instant.now(), order);
-
-            order.setPayment(payment);
-            order.setOrderStatus(OrderStatus.PAID);
-
-            return repository.save(order);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
+        if (order.getOrderStatus() == OrderStatus.CANCELED){
+            throw new BusinessException("Order already CANCELED");
         }
+
+        if (order.getOrderStatus() == OrderStatus.SHIPPED){
+            throw new BusinessException("Order cannot be CANCELED in this status " + order.getOrderStatus());
+        }
+
+        if (order.getOrderStatus() == OrderStatus.DELIVERED){
+            throw new BusinessException("Order cannot be CANCELED in this status " + order.getOrderStatus());
+        }
+
+        order.setOrderStatus(OrderStatus.CANCELED);
+        return repository.save(order);
+
+    }
+
+    public Order ship(Long id){
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if(order.getOrderStatus() != OrderStatus.PAID){
+            throw new BusinessException("Order cannot be SHIPPED in this status " + order.getOrderStatus());
+        }
+
+        order.setOrderStatus(OrderStatus.SHIPPED);
+        return repository.save(order);
+    }
+
+    public Order deliver(Long id){
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if (order.getOrderStatus() != OrderStatus.SHIPPED){
+            throw new BusinessException("Order cannot be DELIVERED in this status " + order.getOrderStatus());
+        }
+
+        order.setOrderStatus(OrderStatus.DELIVERED);
+        return repository.save(order);
     }
 }
