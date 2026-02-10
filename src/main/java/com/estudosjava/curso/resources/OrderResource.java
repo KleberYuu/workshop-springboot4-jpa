@@ -3,7 +3,6 @@ package com.estudosjava.curso.resources;
 
 import com.estudosjava.curso.dto.OrderDTO;
 import com.estudosjava.curso.dto.OrderResponseDTO;
-import com.estudosjava.curso.dto.OrderStatusDTO;
 import com.estudosjava.curso.entities.Order;
 import com.estudosjava.curso.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;

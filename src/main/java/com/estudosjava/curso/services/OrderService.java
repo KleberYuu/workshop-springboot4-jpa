@@ -2,7 +2,6 @@ package com.estudosjava.curso.services;
 
 import com.estudosjava.curso.dto.OrderDTO;
 import com.estudosjava.curso.dto.OrderItemDTO;
-import com.estudosjava.curso.dto.OrderStatusDTO;
 import com.estudosjava.curso.entities.*;
 import com.estudosjava.curso.entities.enums.OrderStatus;
 import com.estudosjava.curso.repositories.OrderItemRepository;
@@ -11,8 +10,6 @@ import com.estudosjava.curso.repositories.ProductRepository;
 import com.estudosjava.curso.repositories.UserRepository;
 import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,18 +87,8 @@ public class OrderService {
             throw new BusinessException("Order already paid");
         }
 
-        if (order.getOrderStatus() == OrderStatus.CANCELED){
-            throw new BusinessException("Order cannot be PAID in this status " + order.getOrderStatus());
-        }
-
-        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT){
-            throw new BusinessException("Order cannot be PAID in this status " + order.getOrderStatus());
-        }
-
-        Payment payment = new Payment(Instant.now(), order);
-        order.setPayment(payment);
-        order.setOrderStatus(OrderStatus.PAID);
-
+        order.pay();
+        order.setPayment(new Payment(Instant.now(), order));
         return repository.save(order);
     }
 
@@ -109,19 +96,7 @@ public class OrderService {
         Order order = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        if (order.getOrderStatus() == OrderStatus.CANCELED){
-            throw new BusinessException("Order already CANCELED");
-        }
-
-        if (order.getOrderStatus() == OrderStatus.SHIPPED){
-            throw new BusinessException("Order cannot be CANCELED in this status " + order.getOrderStatus());
-        }
-
-        if (order.getOrderStatus() == OrderStatus.DELIVERED){
-            throw new BusinessException("Order cannot be CANCELED in this status " + order.getOrderStatus());
-        }
-
-        order.setOrderStatus(OrderStatus.CANCELED);
+        order.cancel();
         return repository.save(order);
 
     }
@@ -130,11 +105,7 @@ public class OrderService {
         Order order = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        if(order.getOrderStatus() != OrderStatus.PAID){
-            throw new BusinessException("Order cannot be SHIPPED in this status " + order.getOrderStatus());
-        }
-
-        order.setOrderStatus(OrderStatus.SHIPPED);
+        order.ship();
         return repository.save(order);
     }
 
@@ -142,11 +113,7 @@ public class OrderService {
         Order order = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        if (order.getOrderStatus() != OrderStatus.SHIPPED){
-            throw new BusinessException("Order cannot be DELIVERED in this status " + order.getOrderStatus());
-        }
-
-        order.setOrderStatus(OrderStatus.DELIVERED);
+        order.deliver();
         return repository.save(order);
     }
 }

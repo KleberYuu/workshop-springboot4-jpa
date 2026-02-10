@@ -1,6 +1,7 @@
 package com.estudosjava.curso.entities;
 
 import com.estudosjava.curso.entities.enums.OrderStatus;
+import com.estudosjava.curso.entities.states.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
@@ -23,6 +24,9 @@ public class Order implements Serializable {
 
     private Integer orderStatus;
 
+    @Transient
+    private OrderState state;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
@@ -33,6 +37,11 @@ public class Order implements Serializable {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
 
+    @PostLoad
+    private void syncStateAfterLoad() {
+        syncState();
+    }
+
     public Order() {
     }
 
@@ -41,6 +50,7 @@ public class Order implements Serializable {
         this.moment = moment;
         setOrderStatus(orderStatus);
         this.client = client;
+        this.state = new WaitingPaymentState();
     }
 
     public Long getId() {
@@ -89,6 +99,30 @@ public class Order implements Serializable {
         return items;
     }
 
+    public OrderState getState() {
+        return state;
+    }
+
+    public void setState(OrderState state) {
+        this.state = state;
+    }
+
+    public void pay() {
+        state.pay(this);
+    }
+
+    public void cancel() {
+        state.cancel(this);
+    }
+
+    public void ship() {
+        state.ship(this);
+    }
+
+    public void deliver() {
+        state.deliver(this);
+    }
+
     public Double getTotal(){
         double sum = 0.0;
         for (OrderItem x : items){
@@ -107,5 +141,15 @@ public class Order implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void syncState() {
+        switch (getOrderStatus()) {
+            case WAITING_PAYMENT -> state = new WaitingPaymentState();
+            case PAID -> state = new PaidState();
+            case SHIPPED -> state = new ShippedState();
+            case DELIVERED -> state = new DeliveredState();
+            case CANCELED -> state = new CanceledState();
+        }
     }
 }

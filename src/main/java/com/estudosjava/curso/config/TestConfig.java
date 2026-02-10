@@ -75,5 +75,10 @@ public class TestConfig implements CommandLineRunner {
         o1.setPayment(pay1);
 
         orderRepository.save(o1);
+//        o1.pay();
+//        o1.ship();
+//        o1.deliver();
+        IO.println(o2.getState());
+        IO.println(o1.getState());
     }
 }
