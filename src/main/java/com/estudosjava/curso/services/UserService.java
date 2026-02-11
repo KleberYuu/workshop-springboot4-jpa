@@ -1,5 +1,6 @@
 package com.estudosjava.curso.services;
 
+import com.estudosjava.curso.dto.UserRequestDTO;
 import com.estudosjava.curso.entities.User;
 import com.estudosjava.curso.repositories.UserRepository;
 import com.estudosjava.curso.services.exceptions.DatabaseException;
@@ -27,8 +28,13 @@ public class UserService {
         return obj.orElseThrow( () -> new ResourceNotFoundException(id));
     }
 
-    public User insert(User obj){
-        return repository.save(obj);
+    public User insert(UserRequestDTO obj){
+        User user = new User();
+        user.setName(obj.getName());
+        user.setEmail(obj.getEmail());
+        user.setPhone(obj.getPhone());
+        user.setPassword(obj.getPassword());
+        return repository.save(user);
     }
 
     public void delete(Long id){
@@ -42,7 +48,7 @@ public class UserService {
         }
     }
 
-    public User update(Long id, User obj){
+    public User update(Long id, UserRequestDTO obj){
         try {
             User entity = repository.getReferenceById(id);
             updateData(entity, obj);
@@ -52,7 +58,7 @@ public class UserService {
         }
     }
 
-    private void updateData(User entity, User obj) {
+    private void updateData(User entity, UserRequestDTO obj) {
         entity.setName(obj.getName());
         entity.setEmail(obj.getEmail());
         entity.setPhone(obj.getPhone());

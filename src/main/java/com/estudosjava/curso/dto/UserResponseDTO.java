@@ -2,14 +2,14 @@ package com.estudosjava.curso.dto;
 
 import com.estudosjava.curso.entities.User;
 
-public class UserMinDTO {
+public class UserResponseDTO  {
 
     private Long id;
     private String name;
     private String email;
     private String phone;
 
-    public UserMinDTO(User user) {
+    public UserResponseDTO (User user) {
         id = user.getId();
         name = user.getName();
         email = user.getEmail();

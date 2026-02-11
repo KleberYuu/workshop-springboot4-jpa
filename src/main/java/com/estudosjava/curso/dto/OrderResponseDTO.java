@@ -14,7 +14,7 @@ public class OrderResponseDTO {
     private Instant moment;
     private OrderStatus orderStatus;
 
-    private UserMinDTO client;
+    private UserResponseDTO client;
 
     private List<OrderItemResponseDTO> items = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public class OrderResponseDTO {
         id = order.getId();
         moment = order.getMoment();
         orderStatus = order.getOrderStatus();
-        client = new UserMinDTO(order.getClient());
+        client = new UserResponseDTO(order.getClient());
 
         for (OrderItem item : order.getItems()) {
             items.add(new OrderItemResponseDTO(item));
@@ -67,11 +67,11 @@ public class OrderResponseDTO {
         this.orderStatus = orderStatus;
     }
 
-    public UserMinDTO getClient() {
+    public UserResponseDTO getClient() {
         return client;
     }
 
-    public void setClient(UserMinDTO client) {
+    public void setClient(UserResponseDTO client) {
         this.client = client;
     }
 
