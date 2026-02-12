@@ -44,7 +44,7 @@ public class UserService {
         try {
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException(e.getMessage());
+            throw new DatabaseException("User cannot be deleted because there are orders linked to it");
         }
     }
 
