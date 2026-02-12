@@ -76,6 +76,11 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             ),
             @ApiResponse(
+                    responseCode = "409",
+                    description = "Email already exists",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = StandardError.class))
@@ -94,6 +99,11 @@ public class UserResource {
             @ApiResponse(
                     responseCode = "400",
                     description = "Invalid input - validation errors or business rule violation",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Email already exists",
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             ),
             @ApiResponse(

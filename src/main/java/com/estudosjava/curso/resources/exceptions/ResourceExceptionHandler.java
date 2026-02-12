@@ -2,6 +2,7 @@ package com.estudosjava.curso.resources.exceptions;
 
 import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.DatabaseException;
+import com.estudosjava.curso.services.exceptions.DuplicateResourceException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -91,4 +92,21 @@ public class ResourceExceptionHandler {
         );
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<StandardError> duplicate(DuplicateResourceException e, HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        StandardError err = new StandardError(
+                Instant.now(),
+                status.value(),
+                "Duplicate resource",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(err);
+    }
+
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "tb_user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User implements Serializable {
 
     @Id
