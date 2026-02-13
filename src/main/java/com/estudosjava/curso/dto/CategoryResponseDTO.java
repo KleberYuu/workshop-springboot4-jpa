@@ -1,7 +1,6 @@
 package com.estudosjava.curso.dto;
 
 import com.estudosjava.curso.entities.Category;
-import com.estudosjava.curso.entities.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,7 @@ public class CategoryResponseDTO {
         id = category.getId();
         name = category.getName();
 
-        for (Product p : category.getProducts()){
-            products.add(new ProductResponseDTO(p));
-        }
+
     }
 
     public Long getId() {

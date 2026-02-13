@@ -13,7 +13,7 @@ public class ProductResponseDTO {
     private String description;
     private Double price;
     private String imgUrl;
-    private Set<Category> categories = new HashSet<>();
+    private Set<CategoryResponseDTO> categories = new HashSet<>();
 
     public ProductResponseDTO(Product product){
         id = product.getId();
@@ -23,7 +23,7 @@ public class ProductResponseDTO {
         imgUrl = product.getImgUrl();
 
         for (Category x : product.getCategories()){
-            categories.add(new Category(x.getId(), x.getName()));
+            categories.add(new CategoryResponseDTO(x));
         }
 
     }
@@ -68,7 +68,7 @@ public class ProductResponseDTO {
         this.imgUrl = imgUrl;
     }
 
-    public Set<Category> getCategories() {
+    public Set<CategoryResponseDTO> getCategories() {
         return categories;
     }
 }

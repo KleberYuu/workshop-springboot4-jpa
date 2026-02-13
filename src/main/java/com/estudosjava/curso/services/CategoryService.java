@@ -1,13 +1,13 @@
 package com.estudosjava.curso.services;
 
+import com.estudosjava.curso.dto.CategoryRequestDTO;
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.repositories.CategoryRepository;
 import com.estudosjava.curso.services.exceptions.DatabaseException;
+import com.estudosjava.curso.services.exceptions.DuplicateResourceException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,21 +25,33 @@ public class CategoryService {
 
     public Category findById(Long id){
         Optional<Category> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow( () -> new ResourceNotFoundException(id));
     }
 
-    public Category insert(Category obj){
-        return repository.save(obj);
-    }
-
-    public Category update(Long id, Category obj){
-        try {
-            Category entity = repository.getReferenceById(id);
-            entity.setName(obj.getName());
-            return repository.save(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
+    public Category insert(CategoryRequestDTO dto){
+        if (repository.existsByName(dto.getName())){
+            throw new DuplicateResourceException("Category already exists");
         }
+
+        Category category = new Category();
+
+        category.setName(dto.getName());
+
+        return repository.save(category);
+    }
+
+    public Category update(Long id, CategoryRequestDTO dto){
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if (!category.getName().equals(dto.getName()) && repository.existsByName(dto.getName())){
+            throw new DuplicateResourceException("Category already exists");
+        }
+
+        category.setName(dto.getName());
+
+        return repository.save(category);
+
     }
 
     public void delete(Long id){
@@ -49,7 +61,7 @@ public class CategoryService {
         try {
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException(e.getMessage());
+            throw new DatabaseException("Category cannot be deleted because there are products linked to it");
         }
     }
 }
