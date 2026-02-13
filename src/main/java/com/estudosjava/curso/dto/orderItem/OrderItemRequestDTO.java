@@ -1,10 +1,16 @@
-package com.estudosjava.curso.dto;
+package com.estudosjava.curso.dto.orderItem;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 public class OrderItemRequestDTO {
-    private Long productId;
-    private Integer quantity;
 
-    public OrderItemRequestDTO() {}
+    @NotNull(message = "Product ID is mandatory")
+    private Long productId;
+
+    @NotNull(message = "Quantity is mandatory")
+    @Min(value = 1, message = "Quantity must be at least 1")
+    private Integer quantity;
 
     public Long getProductId() {
         return productId;

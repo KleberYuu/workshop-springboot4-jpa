@@ -124,7 +124,7 @@ public class ProductResource {
         return ResponseEntity.ok().body(new ProductDetailsDTO(product));
     }
 
-    @Operation(summary = "Delete a product", description = "Delete a product form system using their ID")
+    @Operation(summary = "Delete a product", description = "Delete a product from system using their ID")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
             @ApiResponse(

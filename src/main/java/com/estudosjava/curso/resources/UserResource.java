@@ -1,8 +1,8 @@
 package com.estudosjava.curso.resources;
 
 
-import com.estudosjava.curso.dto.UserRequestDTO;
-import com.estudosjava.curso.dto.UserResponseDTO;
+import com.estudosjava.curso.dto.user.UserRequestDTO;
+import com.estudosjava.curso.dto.user.UserResponseDTO;
 import com.estudosjava.curso.entities.User;
 import com.estudosjava.curso.resources.exceptions.StandardError;
 import com.estudosjava.curso.services.UserService;

@@ -1,13 +1,11 @@
 package com.estudosjava.curso.services;
 
-import com.estudosjava.curso.dto.UserRequestDTO;
+import com.estudosjava.curso.dto.user.UserRequestDTO;
 import com.estudosjava.curso.entities.User;
 import com.estudosjava.curso.repositories.UserRepository;
-import com.estudosjava.curso.services.exceptions.BusinessException;
 import com.estudosjava.curso.services.exceptions.DatabaseException;
 import com.estudosjava.curso.services.exceptions.DuplicateResourceException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

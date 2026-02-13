@@ -1,7 +1,7 @@
 package com.estudosjava.curso.services;
 
-import com.estudosjava.curso.dto.OrderRequestDTO;
-import com.estudosjava.curso.dto.OrderItemRequestDTO;
+import com.estudosjava.curso.dto.order.OrderRequestDTO;
+import com.estudosjava.curso.dto.orderItem.OrderItemRequestDTO;
 import com.estudosjava.curso.entities.*;
 import com.estudosjava.curso.entities.enums.OrderStatus;
 import com.estudosjava.curso.repositories.OrderItemRepository;
@@ -43,11 +43,8 @@ public class OrderService {
 
     public Order insert(OrderRequestDTO dto){
 
-        if (dto.getItems() == null || dto.getItems().isEmpty()) {
-            throw new BusinessException("Order must have at least one item");
-        }
-
-        User user = userRepository.findById(dto.getClientId()).orElseThrow(() -> new ResourceNotFoundException(dto.getClientId()));
+       User user = userRepository.findById(dto.getClientId())
+               .orElseThrow(() -> new ResourceNotFoundException(dto.getClientId()));
 
         Order order = new Order();
         order.setClient(user);

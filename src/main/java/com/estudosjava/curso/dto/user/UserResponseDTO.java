@@ -1,4 +1,4 @@
-package com.estudosjava.curso.dto;
+package com.estudosjava.curso.dto.user;
 
 import com.estudosjava.curso.entities.User;
 

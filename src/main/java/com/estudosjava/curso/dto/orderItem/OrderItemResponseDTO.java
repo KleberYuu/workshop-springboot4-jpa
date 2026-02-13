@@ -1,4 +1,4 @@
-package com.estudosjava.curso.dto;
+package com.estudosjava.curso.dto.orderItem;
 
 import com.estudosjava.curso.entities.OrderItem;
 
