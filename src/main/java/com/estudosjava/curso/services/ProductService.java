@@ -1,6 +1,6 @@
 package com.estudosjava.curso.services;
 
-import com.estudosjava.curso.dto.ProductRequestDTO;
+import com.estudosjava.curso.dto.product.ProductRequestDTO;
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.entities.Product;
 import com.estudosjava.curso.repositories.CategoryRepository;

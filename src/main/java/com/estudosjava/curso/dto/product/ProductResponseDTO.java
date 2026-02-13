@@ -1,5 +1,6 @@
-package com.estudosjava.curso.dto;
+package com.estudosjava.curso.dto.product;
 
+import com.estudosjava.curso.dto.category.CategorySummaryDTO;
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.entities.Product;
 
@@ -10,20 +11,16 @@ public class ProductResponseDTO {
 
     private Long id;
     private String name;
-    private String description;
     private Double price;
-    private String imgUrl;
-    private Set<CategoryResponseDTO> categories = new HashSet<>();
+    private Set<CategorySummaryDTO> categories = new HashSet<>();
 
     public ProductResponseDTO(Product product){
         id = product.getId();
         name = product.getName();
-        description = product.getDescription();
         price = product.getPrice();
-        imgUrl = product.getImgUrl();
 
-        for (Category x : product.getCategories()){
-            categories.add(new CategoryResponseDTO(x));
+        for (Category c : product.getCategories()){
+            categories.add(new CategorySummaryDTO(c));
         }
 
     }
@@ -44,14 +41,6 @@ public class ProductResponseDTO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Double getPrice() {
         return price;
     }
@@ -60,15 +49,7 @@ public class ProductResponseDTO {
         this.price = price;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public Set<CategoryResponseDTO> getCategories() {
+    public Set<CategorySummaryDTO> getCategories() {
         return categories;
     }
 }

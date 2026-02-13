@@ -1,6 +1,6 @@
 package com.estudosjava.curso.services;
 
-import com.estudosjava.curso.dto.CategoryRequestDTO;
+import com.estudosjava.curso.dto.category.CategoryRequestDTO;
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.repositories.CategoryRepository;
 import com.estudosjava.curso.services.exceptions.DatabaseException;

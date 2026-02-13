@@ -1,4 +1,4 @@
-package com.estudosjava.curso.dto;
+package com.estudosjava.curso.dto.category;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

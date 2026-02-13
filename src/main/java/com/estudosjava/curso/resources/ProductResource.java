@@ -1,8 +1,9 @@
 package com.estudosjava.curso.resources;
 
 
-import com.estudosjava.curso.dto.ProductRequestDTO;
-import com.estudosjava.curso.dto.ProductResponseDTO;
+import com.estudosjava.curso.dto.product.ProductDetailsDTO;
+import com.estudosjava.curso.dto.product.ProductRequestDTO;
+import com.estudosjava.curso.dto.product.ProductResponseDTO;
 import com.estudosjava.curso.entities.Product;
 import com.estudosjava.curso.resources.exceptions.StandardError;
 import com.estudosjava.curso.services.ProductService;
@@ -62,9 +63,9 @@ public class ProductResource {
             )
     })
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductResponseDTO> findById(@PathVariable Long id){
+    public ResponseEntity<ProductDetailsDTO> findById(@PathVariable Long id){
         Product product = service.findById(id);
-        return ResponseEntity.ok().body(new ProductResponseDTO(product));
+        return ResponseEntity.ok().body(new ProductDetailsDTO(product));
     }
 
     @Operation(summary = "Create a new product", description = "Add a new product to the system")
@@ -87,7 +88,7 @@ public class ProductResource {
             )
     })
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> insert(@RequestBody @Valid ProductRequestDTO dto) {
+    public ResponseEntity<ProductDetailsDTO> insert(@RequestBody @Valid ProductRequestDTO dto) {
         Product product = service.insert(dto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -95,7 +96,7 @@ public class ProductResource {
                 .buildAndExpand(product.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(new ProductResponseDTO(product));
+        return ResponseEntity.created(uri).body(new ProductDetailsDTO(product));
     }
 
     @Operation(summary = "Update a product", description = "Update an existing product's details")
@@ -118,9 +119,9 @@ public class ProductResource {
             )
     })
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id, @RequestBody ProductRequestDTO dto){
+    public ResponseEntity<ProductDetailsDTO> update(@PathVariable Long id, @RequestBody ProductRequestDTO dto){
         Product product = service.update(id, dto);
-        return ResponseEntity.ok().body(new ProductResponseDTO(product));
+        return ResponseEntity.ok().body(new ProductDetailsDTO(product));
     }
 
     @Operation(summary = "Delete a product", description = "Delete a product form system using their ID")

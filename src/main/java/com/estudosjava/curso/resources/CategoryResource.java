@@ -1,8 +1,9 @@
 package com.estudosjava.curso.resources;
 
 
-import com.estudosjava.curso.dto.CategoryRequestDTO;
-import com.estudosjava.curso.dto.CategoryResponseDTO;
+import com.estudosjava.curso.dto.category.CategoryDetailsDTO;
+import com.estudosjava.curso.dto.category.CategoryRequestDTO;
+import com.estudosjava.curso.dto.category.CategoryResponseDTO;
 import com.estudosjava.curso.entities.Category;
 import com.estudosjava.curso.resources.exceptions.StandardError;
 import com.estudosjava.curso.services.CategoryService;
@@ -62,9 +63,9 @@ public class CategoryResource {
             )
     })
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id){
+    public ResponseEntity<CategoryDetailsDTO> findById(@PathVariable Long id){
         Category category = service.findById(id);
-        return ResponseEntity.ok().body(new CategoryResponseDTO(category));
+        return ResponseEntity.ok().body(new CategoryDetailsDTO(category));
     }
 
     @Operation(summary = "Create a new category", description = "Add a new category to the system")
@@ -87,14 +88,14 @@ public class CategoryResource {
             )
     })
     @PostMapping
-    public ResponseEntity<CategoryResponseDTO> insert(@RequestBody @Valid CategoryRequestDTO dto){
+    public ResponseEntity<CategoryDetailsDTO> insert(@RequestBody @Valid CategoryRequestDTO dto){
         Category category = service.insert(dto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(category.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(new CategoryResponseDTO(category));
+        return ResponseEntity.created(uri).body(new CategoryDetailsDTO(category));
     }
 
     @Operation(summary = "Update a category", description = "Update an existing category's details")
@@ -117,9 +118,9 @@ public class CategoryResource {
             )
     })
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @RequestBody @Valid CategoryRequestDTO dto){
+    public ResponseEntity<CategoryDetailsDTO> update(@PathVariable Long id, @RequestBody @Valid CategoryRequestDTO dto){
         Category category = service.update(id, dto);
-        return ResponseEntity.ok().body(new CategoryResponseDTO(category));
+        return ResponseEntity.ok().body(new CategoryDetailsDTO(category));
     }
 
     @Operation(summary = "Delete a category", description = "Delete a category form system using their ID")

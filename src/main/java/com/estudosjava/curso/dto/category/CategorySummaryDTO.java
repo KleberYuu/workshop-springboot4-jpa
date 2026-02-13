@@ -1,22 +1,15 @@
-package com.estudosjava.curso.dto;
+package com.estudosjava.curso.dto.category;
 
 import com.estudosjava.curso.entities.Category;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CategoryResponseDTO {
+public class CategorySummaryDTO {
 
     private Long id;
     private String name;
 
-    private List<ProductResponseDTO> products = new ArrayList<>();
-
-    public CategoryResponseDTO(Category category) {
+    public CategorySummaryDTO(Category category) {
         id = category.getId();
         name = category.getName();
-
-
     }
 
     public Long getId() {
@@ -33,9 +26,5 @@ public class CategoryResponseDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<ProductResponseDTO> getProducts() {
-        return products;
     }
 }
