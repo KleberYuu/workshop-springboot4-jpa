@@ -1,7 +1,7 @@
 package com.estudosjava.curso.resources;
 
 
-import com.estudosjava.curso.dto.OrderDTO;
+import com.estudosjava.curso.dto.OrderRequestDTO;
 import com.estudosjava.curso.dto.OrderResponseDTO;
 import com.estudosjava.curso.entities.Order;
 import com.estudosjava.curso.services.OrderService;
@@ -37,7 +37,7 @@ public class OrderResource {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> insert(@RequestBody OrderDTO dto){
+    public ResponseEntity<OrderResponseDTO> insert(@RequestBody OrderRequestDTO dto){
         Order order = service.insert(dto);
         OrderResponseDTO response = new OrderResponseDTO(order);
         URI uri = ServletUriComponentsBuilder

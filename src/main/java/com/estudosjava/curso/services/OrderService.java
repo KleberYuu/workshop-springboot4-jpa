@@ -1,7 +1,7 @@
 package com.estudosjava.curso.services;
 
-import com.estudosjava.curso.dto.OrderDTO;
-import com.estudosjava.curso.dto.OrderItemDTO;
+import com.estudosjava.curso.dto.OrderRequestDTO;
+import com.estudosjava.curso.dto.OrderItemRequestDTO;
 import com.estudosjava.curso.entities.*;
 import com.estudosjava.curso.entities.enums.OrderStatus;
 import com.estudosjava.curso.repositories.OrderItemRepository;
@@ -41,7 +41,7 @@ public class OrderService {
         return obj.orElseThrow( () -> new ResourceNotFoundException(id));
     }
 
-    public Order insert(OrderDTO dto){
+    public Order insert(OrderRequestDTO dto){
 
         if (dto.getItems() == null || dto.getItems().isEmpty()) {
             throw new BusinessException("Order must have at least one item");
@@ -56,7 +56,7 @@ public class OrderService {
 
         order = repository.save(order);
 
-        for (OrderItemDTO itemDto : dto.getItems()){
+        for (OrderItemRequestDTO itemDto : dto.getItems()){
 
             Product product = productRepository.findById(itemDto.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException(itemDto.getProductId()));

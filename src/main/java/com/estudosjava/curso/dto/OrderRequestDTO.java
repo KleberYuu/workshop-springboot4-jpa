@@ -3,13 +3,13 @@ package com.estudosjava.curso.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDTO {
+public class OrderRequestDTO {
 
     private Long clientId;
 
-    private List<OrderItemDTO> items = new ArrayList<>();
+    private List<OrderItemRequestDTO> items = new ArrayList<>();
 
-    public OrderDTO() {}
+    public OrderRequestDTO() {}
 
     public Long getClientId() {
         return clientId;
@@ -19,7 +19,7 @@ public class OrderDTO {
         this.clientId = clientId;
     }
 
-    public List<OrderItemDTO> getItems() {
+    public List<OrderItemRequestDTO> getItems() {
         return items;
     }
 }

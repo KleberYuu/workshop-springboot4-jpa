@@ -1,10 +1,10 @@
 package com.estudosjava.curso.dto;
 
-public class OrderItemDTO {
+public class OrderItemRequestDTO {
     private Long productId;
     private Integer quantity;
 
-    public OrderItemDTO() {}
+    public OrderItemRequestDTO() {}
 
     public Long getProductId() {
         return productId;
