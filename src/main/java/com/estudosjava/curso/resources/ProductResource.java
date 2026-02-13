@@ -118,9 +118,9 @@ public class ProductResource {
             )
     })
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductRequestDTO dto){
-        Product obj = service.update(id, dto);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id, @RequestBody ProductRequestDTO dto){
+        Product product = service.update(id, dto);
+        return ResponseEntity.ok().body(new ProductResponseDTO(product));
     }
 
     @Operation(summary = "Delete a product", description = "Delete a product form system using their ID")
