@@ -1,17 +1,28 @@
 package com.estudosjava.curso.dto;
 
+import jakarta.validation.constraints.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDTO {
+public class ProductRequestDTO {
 
+    @NotBlank(message = "Name is mandatory")
+    @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
     private String name;
+
     private String description;
+
+    @NotNull(message = "Price is mandatory")
+    @Positive(message = "Price must be greater than zero")
     private Double price;
+
     private String imgUrl;
+
+    @NotEmpty(message = "At least one category is required")
     private List<Long> categoryIds = new ArrayList<>();
 
-    public ProductDTO() {}
+    public ProductRequestDTO() {}
 
     public String getName() {
         return name;

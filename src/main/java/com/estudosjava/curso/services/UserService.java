@@ -32,7 +32,7 @@ public class UserService {
 
     public User insert(UserRequestDTO dto){
         if (repository.existsByEmail(dto.getEmail())) {
-            throw new BusinessException("Email already in use");
+            throw new DuplicateResourceException("Email already in use");
         }
         User user = new User();
         user.setName(dto.getName());
