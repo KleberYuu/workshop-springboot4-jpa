@@ -108,6 +108,11 @@ public class ProductResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             ),
             @ApiResponse(
+                    responseCode = "404",
+                    description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "Product already exists",
                     content = @Content(schema = @Schema(implementation = StandardError.class))

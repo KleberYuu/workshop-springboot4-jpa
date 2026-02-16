@@ -99,6 +99,11 @@ public class OrderResource {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Payment executed successfully"),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input - validation errors or business rule violation",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "Order not found",
                     content = @Content(schema = @Schema(implementation = StandardError.class))
@@ -118,6 +123,11 @@ public class OrderResource {
     @Operation(summary = "Cancel orders by ID", description = "Cancel a product from the system using its ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Cancellation executed successfully"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input - validation errors or business rule violation",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Order not found",
@@ -139,6 +149,11 @@ public class OrderResource {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Shipping executed successfully"),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input - validation errors or business rule violation",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "Order not found",
                     content = @Content(schema = @Schema(implementation = StandardError.class))
@@ -158,6 +173,11 @@ public class OrderResource {
     @Operation(summary = "Deliver orders by ID", description = "Deliver a product from the system using your ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Deliver executed successfully"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input - validation errors or business rule violation",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Order not found",

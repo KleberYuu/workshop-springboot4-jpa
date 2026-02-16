@@ -102,6 +102,11 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             ),
             @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "Email already exists",
                     content = @Content(schema = @Schema(implementation = StandardError.class))

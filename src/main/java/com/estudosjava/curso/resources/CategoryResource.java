@@ -107,6 +107,11 @@ public class CategoryResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             ),
             @ApiResponse(
+                    responseCode = "404",
+                    description = "Category not found",
+                    content = @Content(schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "Category already exists",
                     content = @Content(schema = @Schema(implementation = StandardError.class))
