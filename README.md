@@ -10,8 +10,6 @@ Este projeto é uma API REST completa para um sistema de e-commerce desenvolvida
 
 Este projeto representa o meu aprendizado prático em desenvolvimento backend com Java e Spring Boot, onde além de seguir o curso, implementei melhorias e funcionalidades adicionais para demonstrar o meu conhecimento e capacidade de evoluir além do conteúdo básico.
 
-**Repositório:** [github.com/KleberYuu/workshop-springboot4-jpa](https://github.com/KleberYuu/workshop-springboot4-jpa)
-
 ---
 
 ## 🎯 Objetivos do Curso
@@ -25,8 +23,6 @@ Este projeto foi desenvolvido seguindo o curso que tinha como objetivos:
 - ✅ Povoar o banco de dados
 - ✅ CRUD completo (Create, Retrieve, Update, Delete)
 - ✅ Tratamento de exceções
-
-**Curso:** [Java COMPLETO - Web Services com Spring Boot e JPA/Hibernate](https://www.udemy.com/course/java-curso-completo/)
 
 ---
 
@@ -50,13 +46,11 @@ Este projeto foi desenvolvido seguindo o curso que tinha como objetivos:
 
 ### 3. **Funcionalidades CRUD**
 
-- CRUD completo para **User** (único recurso com endpoints implementados no curso)
+- CRUD completo para **User**
 
 ### 4. **Banco de Dados**
 
 - Configuração do H2 Database (banco em memória para testes)
-- Configuração do PostgreSQL para desenvolvimento e produção
-- Seed de dados para testes (`data.sql` no perfil dev)
 - Mapeamento JPA/Hibernate
 
 ### 5. **Tratamento de Exceções**
@@ -80,7 +74,24 @@ O curso implementou apenas os endpoints de User. Desenvolvi sozinho toda a API R
 - **Category** - Listar, buscar por ID, criar, atualizar e deletar categorias
 - **Order** - Listar, buscar por ID e criar pedidos
 
-### 2. **Padrão State para Gerenciamento de Pedidos**
+### 2. **Configuração de PostgreSQL e Seed de Dados**
+
+Implementei a configuração completa do PostgreSQL para desenvolvimento e produção:
+
+- Configuração do PostgreSQL como banco padrão (perfil default)
+- Configuração do H2 com seed de dados via `data.sql` (perfil dev)
+- Arquivo `data.sql` para popular o banco H2 com dados de teste
+- Configuração de múltiplos perfis (`application.properties` e `application-dev.properties`)
+- Integração com Docker Compose para facilitar setup do PostgreSQL
+
+**Benefícios:**
+
+- Ambiente de desenvolvimento flexível (H2 para testes rápidos, PostgreSQL para desenvolvimento completo)
+- Dados de teste pré-populados facilitam desenvolvimento e testes
+- Configuração pronta para produção com PostgreSQL
+- Facilita onboarding de novos desenvolvedores
+
+### 3. **Padrão State para Gerenciamento de Pedidos**
 
 Implementei o padrão de projeto **State** para gerenciar o ciclo de vida dos pedidos de forma mais robusta e seguindo princípios SOLID:
 
@@ -105,7 +116,7 @@ Implementei o padrão de projeto **State** para gerenciar o ciclo de vida dos pe
 - `PUT /orders/{id}/ship` - Enviar pedido
 - `PUT /orders/{id}/deliver` - Entregar pedido
 
-### 3. **DTOs (Data Transfer Objects)**
+### 4. **DTOs (Data Transfer Objects)**
 
 Implementei uma camada completa de DTOs para melhor separação de responsabilidades:
 
@@ -131,7 +142,7 @@ Implementei uma camada completa de DTOs para melhor separação de responsabilid
 - Diferentes níveis de detalhamento (Summary, Details)
 - Melhor segurança (não expor campos sensíveis)
 
-### 4. **Validações Robustas**
+### 5. **Validações Robustas**
 
 Implementei validações usando Bean Validation e validações customizadas:
 
@@ -150,7 +161,7 @@ Implementei validações usando Bean Validation e validações customizadas:
 - Mensagens de erro claras e específicas
 - Prevenção de erros de negócio
 
-### 5. **Tratamento de Exceções Aprimorado**
+### 6. **Tratamento de Exceções Aprimorado**
 
 Expandi o tratamento de exceções com novas exceções de negócio:
 
@@ -160,7 +171,7 @@ Expandi o tratamento de exceções com novas exceções de negócio:
 - Handler genérico para exceções não tratadas
 - Respostas de erro padronizadas com detalhes de campos inválidos
 
-### 6. **Documentação da API com Swagger/OpenAPI**
+### 7. **Documentação da API com Swagger/OpenAPI**
 
 Integrei o SpringDoc OpenAPI para documentação automática da API:
 
@@ -169,7 +180,7 @@ Integrei o SpringDoc OpenAPI para documentação automática da API:
 - Esquemas de requisição e resposta documentados
 - Facilita testes e integração
 
-### 7. **Melhorias de Integridade de Dados**
+### 8. **Melhorias de Integridade de Dados**
 
 - Constraints de unicidade no banco (`@UniqueConstraint`)
   - Email único para usuários
@@ -177,7 +188,7 @@ Integrei o SpringDoc OpenAPI para documentação automática da API:
 - Validações de integridade referencial
 - Prevenção de exclusão de recursos com dependências
 
-### 8. **Containerização com Docker**
+### 9. **Containerização com Docker**
 
 Implementei containerização completa do projeto:
 
@@ -187,12 +198,13 @@ Implementei containerização completa do projeto:
 - Facilita deploy e execução em qualquer ambiente
 
 **Benefícios:**
+
 - Ambiente de desenvolvimento consistente
 - Fácil configuração de banco de dados
 - Pronto para deploy em produção
 - Isolamento de dependências
 
-### 9. **Código Limpo e Organizado**
+### 10. **Código Limpo e Organizado**
 
 - Separação clara de responsabilidades
 - Nomenclatura consistente
@@ -297,6 +309,7 @@ docker-compose up --build
 ```
 
 Isso irá:
+
 - Subir um container PostgreSQL na porta 5432
 - Construir e executar a aplicação Spring Boot em um container Docker
 - A aplicação estará disponível em `http://localhost:8080`
@@ -306,6 +319,7 @@ Isso irá:
    - Swagger UI: `http://localhost:8080/swagger-ui.html`
 
 **Para parar os containers:**
+
 ```bash
 docker-compose down
 ```
@@ -351,8 +365,6 @@ O perfil `dev` utiliza H2 em memória e popula automaticamente o banco com dados
 | PUT    | `/users/{id}` | Atualiza usuário        |
 | DELETE | `/users/{id}` | Deleta usuário          |
 
-_Endpoints implementados no curso_
-
 ### 📦 Products (`/products`)
 
 | Método | Endpoint         | Descrição               |
@@ -363,8 +375,6 @@ _Endpoints implementados no curso_
 | PUT    | `/products/{id}` | Atualiza produto        |
 | DELETE | `/products/{id}` | Deleta produto          |
 
-_Implementados solo_
-
 ### 🏷️ Categories (`/categories`)
 
 | Método | Endpoint           | Descrição                 |
@@ -374,8 +384,6 @@ _Implementados solo_
 | POST   | `/categories`      | Cria nova categoria       |
 | PUT    | `/categories/{id}` | Atualiza categoria        |
 | DELETE | `/categories/{id}` | Deleta categoria          |
-
-_Implementados solo_
 
 ### 🛒 Orders (`/orders`)
 
@@ -388,8 +396,6 @@ _Implementados solo_
 | PUT    | `/orders/{id}/cancel`  | Cancela pedido         |
 | PUT    | `/orders/{id}/ship`    | Envia pedido           |
 | PUT    | `/orders/{id}/deliver` | Entrega pedido         |
-
-_Implementados solo_
 
 ---
 
@@ -418,11 +424,12 @@ A documentação inclui:
 - ✅ Arquitetura em camadas (Resource, Service, Repository)
 - ✅ CRUD de User
 - ✅ Tratamento básico de exceções
-- ✅ Configuração de múltiplos perfis (test, dev, prod)
 
 ### Implementações Próprias:
 
 - ✅ CRUD completo para Product, Category e Order
+- ✅ Configuração de PostgreSQL e seed de dados (data.sql)
+- ✅ Configuração de múltiplos perfis (default com PostgreSQL, dev com H2)
 - ✅ Padrão de projeto State
 - ✅ Arquitetura DTO
 - ✅ Validações customizadas (NoDuplicateProducts, UniqueList)
@@ -430,8 +437,6 @@ A documentação inclui:
 - ✅ Tratamento robusto de exceções
 - ✅ Constraints de integridade
 - ✅ Containerização com Docker e Docker Compose
-- ✅ Configuração de múltiplos perfis (default com PostgreSQL, dev com H2)
-- ✅ Seed de dados com data.sql
 - ✅ Código limpo e organizado
 
 ---
