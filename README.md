@@ -6,9 +6,9 @@ Este projeto é uma API REST completa para um sistema de e-commerce desenvolvida
 
 ### 👨‍💻 Sobre o Autor
 
-**Kleber Santos** - Recém formado em Análise e Desenvolvimento de Sistemas, em busca da primeira oportunidade como desenvolvedor backend júnior.
+**Kleber Santos** - Recém-formado em Análise e Desenvolvimento de Sistemas, em busca da primeira oportunidade como desenvolvedor backend júnior.
 
-Este projeto representa meu aprendizado prático em desenvolvimento backend com Java e Spring Boot, onde além de seguir o curso, implementei melhorias e funcionalidades adicionais para demonstrar meu conhecimento e capacidade de evoluir além do conteúdo básico.
+Este projeto representa o meu aprendizado prático em desenvolvimento backend com Java e Spring Boot, onde além de seguir o curso, implementei melhorias e funcionalidades adicionais para demonstrar o meu conhecimento e capacidade de evoluir além do conteúdo básico.
 
 **Repositório:** [github.com/KleberYuu/workshop-springboot4-jpa](https://github.com/KleberYuu/workshop-springboot4-jpa)
 
