@@ -1,5 +1,6 @@
 package com.estudosjava.curso.dto.product;
 
+import com.estudosjava.curso.dto.validation.UniqueList;
 import jakarta.validation.constraints.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class ProductRequestDTO {
     private String imgUrl;
 
     @NotEmpty(message = "At least one category is required")
+    @UniqueList
     private List<Long> categoryIds = new ArrayList<>();
 
     public ProductRequestDTO() {}
