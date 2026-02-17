@@ -55,11 +55,9 @@ Este projeto foi desenvolvido seguindo o curso que tinha como objetivos:
 ### 4. **Banco de Dados**
 
 - Configuração do H2 Database (banco em memória para testes)
-- Dependência PostgreSQL configurada para uso futuro (perfil dev/prod)
-- Seed de dados para testes
+- Configuração do PostgreSQL para desenvolvimento e produção
+- Seed de dados para testes (`data.sql` no perfil dev)
 - Mapeamento JPA/Hibernate
-
-> **Nota sobre PostgreSQL:** O projeto está preparado para uso com PostgreSQL (dependência no `pom.xml`). Para utilizar, basta configurar o perfil `dev` ou `prod` com as credenciais e URL do banco. A configuração segue o padrão Spring Boot e deve funcionar com ajustes mínimos.
 
 ### 5. **Tratamento de Exceções**
 
@@ -179,7 +177,22 @@ Integrei o SpringDoc OpenAPI para documentação automática da API:
 - Validações de integridade referencial
 - Prevenção de exclusão de recursos com dependências
 
-### 8. **Código Limpo e Organizado**
+### 8. **Containerização com Docker**
+
+Implementei containerização completa do projeto:
+
+- **Dockerfile** - Imagem Docker da aplicação Spring Boot
+- **docker-compose.yml** - Orquestração de containers (PostgreSQL + API)
+- Configuração de variáveis de ambiente para diferentes ambientes
+- Facilita deploy e execução em qualquer ambiente
+
+**Benefícios:**
+- Ambiente de desenvolvimento consistente
+- Fácil configuração de banco de dados
+- Pronto para deploy em produção
+- Isolamento de dependências
+
+### 9. **Código Limpo e Organizado**
 
 - Separação clara de responsabilidades
 - Nomenclatura consistente
@@ -194,8 +207,10 @@ Integrei o SpringDoc OpenAPI para documentação automática da API:
 - **Spring Boot 4.0.2**
 - **Spring Data JPA**
 - **Hibernate**
-- **H2 Database** (testes)
-- **PostgreSQL** (dependência configurada para uso futuro)
+- **H2 Database** (perfil dev - testes)
+- **PostgreSQL** (perfil default - produção)
+- **Docker** (containerização)
+- **Docker Compose** (orquestração de containers)
 - **Maven** (gerenciamento de dependências)
 - **SpringDoc OpenAPI** (documentação da API)
 - **Bean Validation** (validações)
@@ -220,7 +235,7 @@ curso/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/estudosjava/curso/
-│   │   │   ├── config/              # Configurações (TestConfig, OpenApiConfig)
+│   │   │   ├── config/              # Configurações (OpenApiConfig)
 │   │   │   ├── dto/                 # Data Transfer Objects
 │   │   │   │   ├── category/
 │   │   │   │   ├── order/
@@ -239,9 +254,12 @@ curso/
 │   │   │   │   └── exceptions/      # Exceções customizadas
 │   │   │   └── CursoApplication.java
 │   │   └── resources/
-│   │       ├── application.properties
-│   │       └── application-test.properties
+│   │       ├── application.properties      # Perfil default (PostgreSQL)
+│   │       ├── application-dev.properties # Perfil dev (H2)
+│   │       └── data.sql                   # Seed de dados (perfil dev)
 │   └── test/
+├── Dockerfile                    # Imagem Docker da aplicação
+├── docker-compose.yml            # Orquestração PostgreSQL + API
 └── pom.xml
 ```
 
@@ -253,8 +271,11 @@ curso/
 
 - Java 25 (ou superior)
 - Maven 3.6+ (ou superior)
+- Docker e Docker Compose (para execução com PostgreSQL)
 
-### Passos para Executar
+### Opção 1: Executar com PostgreSQL (Perfil Default)
+
+Esta opção utiliza PostgreSQL como banco de dados através do Docker Compose.
 
 1. **Clone o repositório:**
 
@@ -263,18 +284,58 @@ git clone https://github.com/KleberYuu/workshop-springboot4-jpa.git
 cd workshop-springboot4-jpa
 ```
 
-2. **Execute a aplicação:**
+2. **Compile o projeto:**
 
 ```bash
-mvn spring-boot:run
+mvn clean package
+```
+
+3. **Execute com Docker Compose:**
+
+```bash
+docker-compose up --build
+```
+
+Isso irá:
+- Subir um container PostgreSQL na porta 5432
+- Construir e executar a aplicação Spring Boot em um container Docker
+- A aplicação estará disponível em `http://localhost:8080`
+
+4. **Acesse a aplicação:**
+   - API: `http://localhost:8080`
+   - Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+**Para parar os containers:**
+```bash
+docker-compose down
+```
+
+### Opção 2: Executar com H2 (Perfil Dev)
+
+Esta opção utiliza H2 (banco em memória) com dados pré-populados, ideal para desenvolvimento rápido.
+
+1. **Clone o repositório:**
+
+```bash
+git clone https://github.com/KleberYuu/workshop-springboot4-jpa.git
+cd workshop-springboot4-jpa
+```
+
+2. **Execute a aplicação com perfil dev:**
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 3. **Acesse a aplicação:**
    - API: `http://localhost:8080`
    - Swagger UI: `http://localhost:8080/swagger-ui.html`
-   - H2 Console: `http://localhost:8080/h2-console` (perfil test)
+   - H2 Console: `http://localhost:8080/h2-console`
+     - JDBC URL: `jdbc:h2:mem:testdb`
+     - Username: `sa`
+     - Password: (vazio)
 
-Por padrão, o projeto usa o perfil `test` com H2 (banco em memória), ideal para desenvolvimento e testes locais sem necessidade de banco externo.
+O perfil `dev` utiliza H2 em memória e popula automaticamente o banco com dados de teste através do arquivo `data.sql`.
 
 ---
 
@@ -368,13 +429,16 @@ A documentação inclui:
 - ✅ Documentação com Swagger/OpenAPI
 - ✅ Tratamento robusto de exceções
 - ✅ Constraints de integridade
+- ✅ Containerização com Docker e Docker Compose
+- ✅ Configuração de múltiplos perfis (default com PostgreSQL, dev com H2)
+- ✅ Seed de dados com data.sql
 - ✅ Código limpo e organizado
 
 ---
 
 ## 🔄 Próximos Passos (Futuras Melhorias)
 
-- [ ] Configurar e testar PostgreSQL em ambiente local
+- [x] ~~Configurar e testar PostgreSQL em ambiente local~~ ✅ **Concluído** - PostgreSQL configurado com Docker e Docker Compose
 - [ ] Autenticação e autorização (JWT)
 - [ ] Testes unitários e de integração
 - [ ] Paginação e ordenação nas listagens
