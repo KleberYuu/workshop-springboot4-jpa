@@ -34,16 +34,16 @@ public class ProductService {
     }
 
     public Product insert(ProductRequestDTO dto) {
-        if (repository.existsByName(dto.getName())){
+        if (repository.existsByName(dto.name())){
             throw new DuplicateResourceException("product already exists");
         }
         Product product = new Product();
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        product.setImgUrl(dto.getImgUrl());
+        product.setName(dto.name());
+        product.setDescription(dto.description());
+        product.setPrice(dto.price());
+        product.setImgUrl(dto.imgUrl());
 
-        for (Long catId : dto.getCategoryIds()) {
+        for (Long catId : dto.categoryIds()) {
             Category category = categoryRepository
                     .findById(catId)
                     .orElseThrow(() -> new ResourceNotFoundException(catId));
@@ -58,17 +58,17 @@ public class ProductService {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        if (!product.getName().equals(dto.getName()) && repository.existsByName(dto.getName())){
+        if (!product.getName().equals(dto.name()) && repository.existsByName(dto.name())){
             throw new DuplicateResourceException("product already exists");
         }
 
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        product.setImgUrl(dto.getImgUrl());
+        product.setName(dto.name());
+        product.setDescription(dto.description());
+        product.setPrice(dto.price());
+        product.setImgUrl(dto.imgUrl());
 
         product.getCategories().clear();
-        for (Long catId : dto.getCategoryIds()) {
+        for (Long catId : dto.categoryIds()) {
             Category category = categoryRepository
                     .findById(catId)
                     .orElseThrow(() -> new ResourceNotFoundException(catId));

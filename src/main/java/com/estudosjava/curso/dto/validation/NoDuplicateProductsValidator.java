@@ -13,11 +13,11 @@ public class NoDuplicateProductsValidator
 
     @Override
     public boolean isValid(OrderRequestDTO dto, ConstraintValidatorContext context) {
-        if (dto.getItems() == null) return true;
+        if (dto.items() == null) return true;
 
         Set<Long> productIds = new HashSet<>();
-        for (OrderItemRequestDTO item : dto.getItems()) {
-            Long productId = item.getProductId();
+        for (OrderItemRequestDTO item : dto.items()) {
+            Long productId = item.productId();
 
             if (productId == null) continue;
 

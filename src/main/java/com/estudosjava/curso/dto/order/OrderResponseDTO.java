@@ -4,89 +4,52 @@ import com.estudosjava.curso.dto.orderItem.OrderItemResponseDTO;
 import com.estudosjava.curso.dto.PaymentResponseDTO;
 import com.estudosjava.curso.dto.user.UserResponseDTO;
 import com.estudosjava.curso.entities.Order;
-import com.estudosjava.curso.entities.OrderItem;
 import com.estudosjava.curso.entities.enums.OrderStatus;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
-public class OrderResponseDTO {
+public record OrderResponseDTO (
 
-    private Long id;
-    private Instant moment;
-    private OrderStatus orderStatus;
+        Long id,
+        Instant moment,
+        OrderStatus orderStatus,
 
-    private UserResponseDTO client;
+        UserResponseDTO client,
 
-    private List<OrderItemResponseDTO> items = new ArrayList<>();
+        List<OrderItemResponseDTO> items,
 
-    private PaymentResponseDTO payment;
+        PaymentResponseDTO payment
 
+){
     public OrderResponseDTO(Order order) {
-        id = order.getId();
-        moment = order.getMoment();
-        orderStatus = order.getOrderStatus();
-        client = new UserResponseDTO(order.getClient());
-
-        for (OrderItem item : order.getItems()) {
-            items.add(new OrderItemResponseDTO(item));
-        }
-
-        if (order.getPayment() != null) {
-            this.payment = new PaymentResponseDTO(order.getPayment());
-        }
+        this(
+                order.getId(),
+                order.getMoment(),
+                order.getOrderStatus(),
+                new UserResponseDTO(
+                        order.getClient().getId(),
+                        order.getClient().getName(),
+                        order.getClient().getEmail(),
+                        order.getClient().getPhone()
+                ),
+                order.getItems().stream()
+                        .map(item -> new OrderItemResponseDTO(
+                                item.getProduct().getId(),
+                                item.getProduct().getName(),
+                                item.getQuantity(),
+                                item.getPrice()
+                        ))
+                        .toList(),
+                order.getPayment() != null
+                        ? new PaymentResponseDTO(order.getPayment().getMoment())
+                        : null
+        );
     }
 
-    public Double getTotal(){
-        double sum = 0.0;
-        for (OrderItemResponseDTO x : items){
-            sum += x.getSubTotal();
-        }
-        return sum;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Instant getMoment() {
-        return moment;
-    }
-
-    public void setMoment(Instant moment) {
-        this.moment = moment;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public UserResponseDTO getClient() {
-        return client;
-    }
-
-    public void setClient(UserResponseDTO client) {
-        this.client = client;
-    }
-
-    public List<OrderItemResponseDTO> getItems() {
-        return items;
-    }
-
-    public PaymentResponseDTO getPayment() {
-        return payment;
-    }
-
-    public void setPayment(PaymentResponseDTO payment) {
-        this.payment = payment;
+    public Double getTotal() {
+        return items.stream()
+                .mapToDouble(OrderItemResponseDTO::getSubTotal)
+                .sum();
     }
 }

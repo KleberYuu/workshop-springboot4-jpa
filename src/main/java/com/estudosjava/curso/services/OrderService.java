@@ -43,8 +43,8 @@ public class OrderService {
 
     public Order insert(OrderRequestDTO dto){
 
-       User user = userRepository.findById(dto.getClientId())
-               .orElseThrow(() -> new ResourceNotFoundException(dto.getClientId()));
+       User user = userRepository.findById(dto.clientId())
+               .orElseThrow(() -> new ResourceNotFoundException(dto.clientId()));
 
         Order order = new Order();
         order.setClient(user);
@@ -53,15 +53,15 @@ public class OrderService {
 
         order = repository.save(order);
 
-        for (OrderItemRequestDTO itemDto : dto.getItems()){
+        for (OrderItemRequestDTO itemDto : dto.items()){
 
-            Product product = productRepository.findById(itemDto.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException(itemDto.getProductId()));
+            Product product = productRepository.findById(itemDto.productId())
+                    .orElseThrow(() -> new ResourceNotFoundException(itemDto.productId()));
 
             OrderItem item = new OrderItem(
                     order,
                     product,
-                    itemDto.getQuantity(),
+                    itemDto.quantity(),
                     product.getPrice()
             );
 

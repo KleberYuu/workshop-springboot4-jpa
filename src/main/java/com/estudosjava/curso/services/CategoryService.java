@@ -29,13 +29,13 @@ public class CategoryService {
     }
 
     public Category insert(CategoryRequestDTO dto){
-        if (repository.existsByName(dto.getName())){
+        if (repository.existsByName(dto.name())){
             throw new DuplicateResourceException("Category already exists");
         }
 
         Category category = new Category();
 
-        category.setName(dto.getName());
+        category.setName(dto.name());
 
         return repository.save(category);
     }
@@ -44,11 +44,11 @@ public class CategoryService {
         Category category = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        if (!category.getName().equals(dto.getName()) && repository.existsByName(dto.getName())){
+        if (!category.getName().equals(dto.name()) && repository.existsByName(dto.name())){
             throw new DuplicateResourceException("Category already exists");
         }
 
-        category.setName(dto.getName());
+        category.setName(dto.name());
 
         return repository.save(category);
 

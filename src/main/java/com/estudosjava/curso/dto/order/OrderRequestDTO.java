@@ -11,25 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoDuplicateProducts
-public class OrderRequestDTO {
+public record OrderRequestDTO (
 
     @NotNull(message = "Client ID is mandatory")
     @Positive(message = "Client ID must be positive")
-    private Long clientId;
+    Long clientId,
 
     @NotEmpty(message = "Order must have at least one item")
     @Valid
-    private List<OrderItemRequestDTO> items = new ArrayList<>();
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public List<OrderItemRequestDTO> getItems() {
-        return items;
-    }
-}
+    List<OrderItemRequestDTO> items
+){}

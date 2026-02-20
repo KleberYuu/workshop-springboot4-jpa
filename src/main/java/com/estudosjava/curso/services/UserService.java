@@ -29,14 +29,14 @@ public class UserService {
     }
 
     public User insert(UserRequestDTO dto){
-        if (repository.existsByEmail(dto.getEmail())) {
+        if (repository.existsByEmail(dto.email())) {
             throw new DuplicateResourceException("Email already in use");
         }
         User user = new User();
-        user.setName(dto.getName());
-        user.setEmail(dto.getEmail());
-        user.setPhone(dto.getPhone());
-        user.setPassword(dto.getPassword());
+        user.setName(dto.name());
+        user.setEmail(dto.email());
+        user.setPhone(dto.phone());
+        user.setPassword(dto.password());
         return repository.save(user);
     }
 
@@ -45,15 +45,15 @@ public class UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        if (!user.getEmail().equals(dto.getEmail())
-                && repository.existsByEmail(dto.getEmail())) {
+        if (!user.getEmail().equals(dto.email())
+                && repository.existsByEmail(dto.email())) {
 
             throw new DuplicateResourceException("Email already registered");
         }
 
-        user.setEmail(dto.getEmail());
-        user.setName(dto.getName());
-        user.setPhone(dto.getPhone());
+        user.setEmail(dto.email());
+        user.setName(dto.name());
+        user.setPhone(dto.phone());
 
         return repository.save(user);
     }
