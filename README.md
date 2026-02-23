@@ -338,7 +338,8 @@ cd workshop-springboot4-jpa
 2. **Execute a aplicação com perfil dev:**
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run -Dspring-boot.run.profiles=dev ou ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+
 ```
 
 3. **Acesse a aplicação:**
