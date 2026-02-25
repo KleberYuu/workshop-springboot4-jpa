@@ -266,9 +266,9 @@ curso/
 │   │   │   │   └── exceptions/      # Exceções customizadas
 │   │   │   └── CursoApplication.java
 │   │   └── resources/
-│   │       ├── application.properties      # Perfil default (PostgreSQL)
+│   │       ├── application.properties     # Perfil default (PostgreSQL)
 │   │       ├── application-dev.properties # Perfil dev (H2)
-│   │       └── data.sql                   # Seed de dados (perfil dev)
+│   │       └── db/miration                # V1 de dados (Flyway)
 │   └── test/
 ├── Dockerfile                    # Imagem Docker da aplicação
 ├── docker-compose.yml            # Orquestração PostgreSQL + API
@@ -445,6 +445,7 @@ A documentação inclui:
 ## 🔄 Próximos Passos (Futuras Melhorias)
 
 - [x] ~~Configurar e testar PostgreSQL em ambiente local~~ ✅ **Concluído** - PostgreSQL configurado com Docker e Docker Compose
+- [x] Implementação do Flyway ✅ **Concluído**
 - [ ] Autenticação e autorização (JWT)
 - [ ] Testes unitários e de integração
 - [ ] Paginação e ordenação nas listagens
