@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,6 +39,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         List<UserResponseDTO> list = service.findAll()
@@ -61,6 +63,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id){
         User user = service.findById(id);
@@ -86,6 +89,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponseDTO> insert(@RequestBody @Valid UserRequestDTO dto){
         User user = service.insert(dto);
@@ -117,6 +121,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserRequestDTO dto){
         User user = service.update(id, dto);
@@ -142,6 +147,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
