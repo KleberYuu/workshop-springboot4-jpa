@@ -10,6 +10,7 @@ import com.estudosjava.curso.services.exceptions.DuplicateResourceException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> findAll(){
         return repository.findAll();
@@ -41,7 +45,7 @@ public class UserService {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
 
         Role roleUser = roleRepository.findByAuthority("ROLE_USER");
         user.getRoles().add(roleUser);
