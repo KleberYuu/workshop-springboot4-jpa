@@ -1,13 +1,16 @@
 package com.estudosjava.curso.services;
 
 import com.estudosjava.curso.dto.user.UserRequestDTO;
+import com.estudosjava.curso.entities.Role;
 import com.estudosjava.curso.entities.User;
+import com.estudosjava.curso.repositories.RoleRepository;
 import com.estudosjava.curso.repositories.UserRepository;
 import com.estudosjava.curso.services.exceptions.DatabaseException;
 import com.estudosjava.curso.services.exceptions.DuplicateResourceException;
 import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,12 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> findAll(){
         return repository.findAll();
@@ -36,7 +45,11 @@ public class UserService {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
+
+        Role roleUser = roleRepository.findByAuthority("ROLE_USER");
+        user.getRoles().add(roleUser);
+
         return repository.save(user);
     }
 

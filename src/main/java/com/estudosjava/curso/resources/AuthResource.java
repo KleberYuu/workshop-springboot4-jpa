@@ -5,7 +5,9 @@ import com.estudosjava.curso.dto.auth.LoginRequestDTO;
 import com.estudosjava.curso.dto.auth.LoginResponseDTO;
 import com.estudosjava.curso.dto.auth.RegisterUserRequestDTO;
 import com.estudosjava.curso.dto.auth.RegisterUserResponseDTO;
+import com.estudosjava.curso.entities.Role;
 import com.estudosjava.curso.entities.User;
+import com.estudosjava.curso.repositories.RoleRepository;
 import com.estudosjava.curso.repositories.UserRepository;
 import com.estudosjava.curso.resources.exceptions.StandardError;
 import com.estudosjava.curso.security.JWTUtil;
@@ -47,6 +49,9 @@ public class AuthResource {
 
     @Autowired
     private JWTUtil jwtUtil;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Operation(
             summary = "Log in",
@@ -110,6 +115,9 @@ public class AuthResource {
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
         user.setPassword(passwordEncoder.encode(dto.password()));
+
+        Role roleUser = roleRepository.findByAuthority("ROLE_USER");
+        user.getRoles().add(roleUser);
 
         userRepository.save(user);
 

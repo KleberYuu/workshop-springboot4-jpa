@@ -7,6 +7,7 @@ import com.estudosjava.curso.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -126,5 +127,21 @@ public class ResourceExceptionHandler {
         );
 
         return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardError> handleAccessDenied(
+            AccessDeniedException e,
+            HttpServletRequest request) {
+
+        StandardError err = new StandardError(
+                Instant.now(),
+                HttpStatus.FORBIDDEN.value(),
+                "Access denied",
+                "You do not have permission to access this resource",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
     }
 }

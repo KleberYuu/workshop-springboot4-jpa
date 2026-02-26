@@ -3,6 +3,7 @@ package com.estudosjava.curso.resources;
 
 import com.estudosjava.curso.dto.user.UserRequestDTO;
 import com.estudosjava.curso.dto.user.UserResponseDTO;
+import com.estudosjava.curso.dto.user.UserRoleResponseDTO;
 import com.estudosjava.curso.entities.User;
 import com.estudosjava.curso.resources.exceptions.StandardError;
 import com.estudosjava.curso.services.UserService;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,11 +40,12 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> findAll() {
-        List<UserResponseDTO> list = service.findAll()
+    public ResponseEntity<List<UserRoleResponseDTO>> findAll() {
+        List<UserRoleResponseDTO> list = service.findAll()
                 .stream()
-                .map(UserResponseDTO::new)
+                .map(UserRoleResponseDTO::new)
                 .toList();
         return ResponseEntity.ok().body(list);
     }
@@ -61,10 +64,11 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id){
+    public ResponseEntity<UserRoleResponseDTO> findById(@PathVariable Long id){
         User user = service.findById(id);
-        return ResponseEntity.ok().body(new UserResponseDTO(user));
+        return ResponseEntity.ok().body(new UserRoleResponseDTO(user));
     }
 
     @Operation(summary = "Create a new user", description = "Add a new user to the system")
@@ -86,6 +90,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponseDTO> insert(@RequestBody @Valid UserRequestDTO dto){
         User user = service.insert(dto);
@@ -117,6 +122,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserRequestDTO dto){
         User user = service.update(id, dto);
@@ -142,6 +148,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = StandardError.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
