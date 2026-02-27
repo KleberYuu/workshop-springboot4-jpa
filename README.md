@@ -53,7 +53,7 @@ Este projeto foi desenvolvido seguindo o curso que tinha como objetivos:
 - Configuração do H2 Database (banco em memória para testes)
 - Mapeamento JPA/Hibernate
 
-### 5. **Tratamento de Exceções**
+### 5. **Tratamento Global de Exceções**
 
 - `ResourceNotFoundException` - Recurso não encontrado
 - `DatabaseException` - Erros de integridade do banco
@@ -62,38 +62,65 @@ Este projeto foi desenvolvido seguindo o curso que tinha como objetivos:
 
 ---
 
-## ✨ Melhorias e Funcionalidades Adicionais (Implementadas Solo)
+# 🚀 Evolução do Projeto (Implementações Próprias)
 
-Além do conteúdo do curso, implementei as seguintes melhorias:
+## 🥇 1ª Evolução — PostgreSQL + Docker
 
-### 1. **CRUD completo para Product, Category e Order**
+Primeira melhoria estrutural:
 
-O curso implementou apenas os endpoints de User. Desenvolvi sozinho toda a API REST para:
+- Substituição do banco em memória por **PostgreSQL**
+- Configuração de múltiplos perfis (default e dev)
+- Containerização com Docker
+- Orquestração com Docker Compose
 
-- **Product** - Listar, buscar por ID, criar, atualizar e deletar produtos
-- **Category** - Listar, buscar por ID, criar, atualizar e deletar categorias
-- **Order** - Listar, buscar por ID e criar pedidos
+Objetivo: aproximar o projeto de um ambiente real de backend.
 
-### 2. **Configuração de PostgreSQL e Seed de Dados**
+---
 
-Implementei a configuração completa do PostgreSQL para desenvolvimento e produção:
+## 🥈 2ª Evolução — Flyway (Migrations Versionadas)
 
-- Configuração do PostgreSQL como banco padrão (perfil default)
-- Configuração do H2 com seed de dados via `data.sql` (perfil dev)
-- Arquivo `data.sql` para popular o banco H2 com dados de teste
-- Configuração de múltiplos perfis (`application.properties` e `application-dev.properties`)
-- Integração com Docker Compose para facilitar setup do PostgreSQL
+Implementação de versionamento de banco com **Flyway**:
 
-**Benefícios:**
+- Criação de migrations
+- Controle de versionamento de schema
+- Separação entre estrutura e seed de dados
+- Controle de evolução do banco
 
-- Ambiente de desenvolvimento flexível (H2 para testes rápidos, PostgreSQL para desenvolvimento completo)
-- Dados de teste pré-populados facilitam desenvolvimento e testes
-- Configuração pronta para produção com PostgreSQL
-- Facilita onboarding de novos desenvolvedores
+Objetivo: aplicar prática comum em projetos profissionais.
 
-### 3. **Padrão State para Gerenciamento de Pedidos**
+---
 
-Implementei o padrão de projeto **State** para gerenciar o ciclo de vida dos pedidos de forma mais robusta e seguindo princípios SOLID:
+## 🥉 3ª Evolução — Autenticação e Autorização (JWT + RBAC)
+
+Implementação de segurança com **Spring Security**.
+
+### 🔐 Recursos implementados:
+
+- Autenticação stateless com JWT
+- Criptografia de senha com BCrypt
+- Controle de acesso baseado em roles (RBAC):
+  - ROLE_USER
+  - ROLE_ADMIN
+- Usuário ADMIN criado via migration
+- Proteção de endpoints por perfil
+- Tratamento de AuthenticationException
+- Tratamento de AccessDeniedException
+
+A aplicação utiliza:
+
+```java
+session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+```
+
+Sem uso de sessão HTTP, validando o token a cada requisição via filtro personalizado.
+
+Objetivo: elevar o projeto ao nível de backend seguro e controlado por perfis.
+
+---
+
+### 🔄 State Pattern (Pedidos)
+
+Implementação do padrão **State** para gerenciar o ciclo de vida dos pedidos de forma mais robusta e seguindo princípios SOLID:
 
 - **OrderState** - Interface para estados do pedido
 - **WaitingPaymentState** - Estado inicial (aguardando pagamento)
@@ -102,58 +129,61 @@ Implementei o padrão de projeto **State** para gerenciar o ciclo de vida dos pe
 - **DeliveredState** - Estado após entrega
 - **CanceledState** - Estado cancelado
 
-**Benefícios:**
-
-- Transições de estado controladas e validadas
-- Prevenção de operações inválidas (ex: não pode enviar antes de pagar)
-- Código mais limpo e manutenível
-- Facilita extensão futura de novos estados
-
-**Endpoints adicionais:**
+**Transições controladas via endpoints específicos:**
 
 - `PUT /orders/{id}/pay` - Pagar pedido
 - `PUT /orders/{id}/cancel` - Cancelar pedido
 - `PUT /orders/{id}/ship` - Enviar pedido
 - `PUT /orders/{id}/deliver` - Entregar pedido
-
-### 4. **DTOs (Data Transfer Objects)**
-
-Implementei uma camada completa de DTOs para melhor separação de responsabilidades:
-
-- **RequestDTOs** - Para receber dados das requisições
-  - `UserRequestDTO`
-  - `ProductRequestDTO`
-  - `CategoryRequestDTO`
-  - `OrderRequestDTO`
-  - `OrderItemRequestDTO`
-
-- **ResponseDTOs** - Para retornar dados formatados
-  - `UserResponseDTO`
-  - `ProductResponseDTO`, `ProductDetailsDTO`, `ProductSummaryDTO`
-  - `CategoryResponseDTO`, `CategoryDetailsDTO`, `CategorySummaryDTO`
-  - `OrderResponseDTO`
-  - `OrderItemResponseDTO`
-  - `PaymentResponseDTO`
-
+  
 **Benefícios:**
 
-- Controle sobre quais dados são expostos na API
-- Prevenção de serialização circular
-- Diferentes níveis de detalhamento (Summary, Details)
-- Melhor segurança (não expor campos sensíveis)
+- Transições de estado controladas e validadas
+- Prevenção de transições inválidas
+- Código aberto para extensão (Open/Closed Principle)
+- Regras de negócio encapsuladas
 
-### 5. **Validações Robustas**
+---
+
+### 📦 DTO Pattern
+
+- RequestDTO
+- ResponseDTO
+- SummaryDTO
+- DetailsDTO
+
+Benefícios:
+- Controle sobre dados expostos
+- Evita serialização circular
+- Maior segurança
+- Diferentes níveis de detalhamento
+
+---
+
+### 🧪 Validações e Regras de Negócio
 
 Implementei validações usando Bean Validation e validações customizadas:
 
-- Validações com `@NotNull`, `@NotEmpty`, `@Positive`, `@Valid`, `@NotBlank`, `@Size`
-- **Validação customizada: `NoDuplicateProducts` / `NoDuplicateProductsValidator`**
-  - Previne produtos duplicados no mesmo pedido
-- **Validação customizada: `UniqueList` / `UniqueListValidator`**
-  - Garante que listas não contenham elementos duplicados
-  - Usada em `ProductRequestDTO.categoryIds` para evitar a mesma categoria ser associada múltiplas vezes ao produto
-- Validação de email único no banco de dados
-- Validação de nome único para produtos e categorias
+## Bean Validation
+
+- @NotNull
+- @NotBlank
+- @Size
+- @Positive
+- @Valid
+
+## Validações Customizadas
+
+- NoDuplicateProducts
+- UniqueList
+
+## Regras Aplicadas
+
+- Email único para usuário
+- Nome único para produto
+- Nome único para categoria
+- Bloqueio de exclusão com dependências
+- Controle de transições inválidas de estado
 
 **Benefícios:**
 
@@ -161,7 +191,19 @@ Implementei validações usando Bean Validation e validações customizadas:
 - Mensagens de erro claras e específicas
 - Prevenção de erros de negócio
 
-### 6. **Tratamento de Exceções Aprimorado**
+---
+
+### Melhorias de Integridade de Dados
+
+- Constraints de unicidade no banco (`@UniqueConstraint`)
+  - Email único para usuários
+  - Nome único para produtos
+- Validações de integridade referencial
+- Prevenção de exclusão de recursos com dependências
+
+---
+
+### ⚠️Tratamento de Exceções Aprimorado
 
 Expandi o tratamento de exceções com novas exceções de negócio:
 
@@ -171,45 +213,28 @@ Expandi o tratamento de exceções com novas exceções de negócio:
 - Handler genérico para exceções não tratadas
 - Respostas de erro padronizadas com detalhes de campos inválidos
 
-### 7. **Documentação da API com Swagger/OpenAPI**
+---
 
-Integrei o SpringDoc OpenAPI para documentação automática da API:
+### 🗄️ Banco de Dados
 
-- Documentação interativa disponível em `/swagger-ui.html`
-- Anotações `@Operation`, `@ApiResponse`, `@Tag` em todos os endpoints
-- Esquemas de requisição e resposta documentados
-- Facilita testes e integração
+## Perfil Default
+PostgreSQL
 
-### 8. **Melhorias de Integridade de Dados**
+## Perfil Dev
+H2 em memória
 
-- Constraints de unicidade no banco (`@UniqueConstraint`)
-  - Email único para usuários
-  - Nome único para produtos
-- Validações de integridade referencial
-- Prevenção de exclusão de recursos com dependências
+## Versionamento
+Flyway para migrations versionadas
 
-### 9. **Containerização com Docker**
+---
 
-Implementei containerização completa do projeto:
+### 🐳 Containerização
 
-- **Dockerfile** - Imagem Docker da aplicação Spring Boot
-- **docker-compose.yml** - Orquestração de containers (PostgreSQL + API)
-- Configuração de variáveis de ambiente para diferentes ambientes
-- Facilita deploy e execução em qualquer ambiente
+- Dockerfile para aplicação
+- Docker Compose para PostgreSQL + API
+- Variáveis de ambiente configuráveis
 
-**Benefícios:**
-
-- Ambiente de desenvolvimento consistente
-- Fácil configuração de banco de dados
-- Pronto para deploy em produção
-- Isolamento de dependências
-
-### 10. **Código Limpo e Organizado**
-
-- Separação clara de responsabilidades
-- Nomenclatura consistente
-- Comentários e documentação inline
-- Estrutura de pacotes bem organizada
+Execução padronizada em qualquer ambiente.
 
 ---
 
@@ -226,54 +251,17 @@ Implementei containerização completa do projeto:
 - **Maven** (gerenciamento de dependências)
 - **SpringDoc OpenAPI** (documentação da API)
 - **Bean Validation** (validações)
-
-### Dependências Principais
-
-```xml
-- spring-boot-starter-webmvc
-- spring-boot-starter-data-jpa
-- spring-boot-starter-validation
-- h2 (runtime)
-- postgresql (runtime)
-- springdoc-openapi-starter-webmvc-ui
-```
+- **Spring Security**
+- **JWT**
+- **Flyway**
 
 ---
 
-## 📁 Estrutura do Projeto
+# 📚 Documentação da API
 
-```
-curso/
-├── src/
-│   ├── main/
-│   │   ├── java/com/estudosjava/curso/
-│   │   │   ├── config/              # Configurações (OpenApiConfig)
-│   │   │   ├── dto/                 # Data Transfer Objects
-│   │   │   │   ├── category/
-│   │   │   │   ├── order/
-│   │   │   │   ├── orderItem/
-│   │   │   │   ├── product/
-│   │   │   │   ├── user/
-│   │   │   │   └── validation/      # Validações customizadas
-│   │   │   ├── entities/            # Entidades JPA
-│   │   │   │   ├── enums/           # Enums (OrderStatus)
-│   │   │   │   ├── pk/              # Chaves primárias compostas
-│   │   │   │   └── states/          # Implementações do padrão State
-│   │   │   ├── repositories/        # Repositórios JPA
-│   │   │   ├── resources/           # Controllers REST
-│   │   │   │   └── exceptions/      # Handler de exceções
-│   │   │   ├── services/            # Camada de serviço
-│   │   │   │   └── exceptions/      # Exceções customizadas
-│   │   │   └── CursoApplication.java
-│   │   └── resources/
-│   │       ├── application.properties     # Perfil default (PostgreSQL)
-│   │       ├── application-dev.properties # Perfil dev (H2)
-│   │       └── db/miration                # V1 de dados (Flyway)
-│   └── test/
-├── Dockerfile                    # Imagem Docker da aplicação
-├── docker-compose.yml            # Orquestração PostgreSQL + API
-└── pom.xml
-```
+Swagger disponível em:
+
+http://localhost:8080/swagger-ui.html
 
 ---
 
@@ -300,6 +288,8 @@ cd workshop-springboot4-jpa
 
 ```bash
 mvn clean package
+ou
+./mvnw clean package
 ```
 
 3. **Execute com Docker Compose:**
@@ -317,6 +307,9 @@ Isso irá:
 4. **Acesse a aplicação:**
    - API: `http://localhost:8080`
    - Swagger UI: `http://localhost:8080/swagger-ui.html`
+   - Usuário ADMIN criado via migration
+     - `email = 'admin@admin.com'`
+     - `password = 123456`
 
 **Para parar os containers:**
 
@@ -338,7 +331,9 @@ cd workshop-springboot4-jpa
 2. **Execute a aplicação com perfil dev:**
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev ou ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+ou
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 
 ```
 
@@ -349,22 +344,31 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev ou ./mvnw spring-boot:run -Ds
      - JDBC URL: `jdbc:h2:mem:testdb`
      - Username: `sa`
      - Password: (vazio)
+  - Usuário ADMIN criado via migration
+     - `email = 'admin@admin.com'`
+     - `password = 123456`
 
-O perfil `dev` utiliza H2 em memória e popula automaticamente o banco com dados de teste através do arquivo `data.sql`.
 
 ---
 
 ## 📡 Endpoints da API
 
+### Authentication (`/auth`)
+
+| Método | Endpoint      | Descrição         |
+| ------ | ------------- | ----------------- |
+| POST   | `/register`   | Cria novo usuário |
+| POST   | `/login`      | Fazer login       |
+
 ### 👤 Users (`/users`)
 
-| Método | Endpoint      | Descrição               |
-| ------ | ------------- | ----------------------- |
-| GET    | `/users`      | Lista todos os usuários |
-| GET    | `/users/{id}` | Busca usuário por ID    |
-| POST   | `/users`      | Cria novo usuário       |
-| PUT    | `/users/{id}` | Atualiza usuário        |
-| DELETE | `/users/{id}` | Deleta usuário          |
+| Método | Endpoint      | Descrição               | ROLE_USER | ROLE_ADMIN |
+| ------ | ------------- | ----------------------- | --------- | ---------- |
+| GET    | `/users`      | Lista todos os usuários | ✅        | ✅        |
+| GET    | `/users/{id}` | Busca usuário por ID    | ❌        | ✅        |
+| POST   | `/users`      | Cria novo usuário       | ❌        | ✅        |
+| PUT    | `/users/{id}` | Atualiza usuário        | ✅        | ✅        |
+| DELETE | `/users/{id}` | Deleta usuário          | ❌        | ✅        |
 
 ### 📦 Products (`/products`)
 
@@ -400,81 +404,25 @@ O perfil `dev` utiliza H2 em memória e popula automaticamente o banco com dados
 
 ---
 
-## 📚 Documentação da API
+# 📈 Próximos Passos (Evolução Contínua)
 
-A documentação completa da API está disponível através do Swagger UI:
-
-**Acesse:** `http://localhost:8080/swagger-ui.html`
-
-A documentação inclui:
-
-- Descrição de todos os endpoints
-- Esquemas de requisição e resposta
-- Códigos de status HTTP
-- Exemplos de uso
-- Possibilidade de testar os endpoints diretamente
-
----
-
-## 🎓 Aprendizados e Conquistas
-
-### Durante o Curso:
-
-- ✅ Fundamentos de Spring Boot
-- ✅ JPA/Hibernate e mapeamento de entidades
-- ✅ Arquitetura em camadas (Resource, Service, Repository)
-- ✅ CRUD de User
-- ✅ Tratamento básico de exceções
-
-### Implementações Próprias:
-
-- ✅ CRUD completo para Product, Category e Order
-- ✅ Configuração de PostgreSQL e seed de dados (data.sql)
-- ✅ Configuração de múltiplos perfis (default com PostgreSQL, dev com H2)
-- ✅ Padrão de projeto State
-- ✅ Arquitetura DTO
-- ✅ Validações customizadas (NoDuplicateProducts, UniqueList)
-- ✅ Documentação com Swagger/OpenAPI
-- ✅ Tratamento robusto de exceções
-- ✅ Constraints de integridade
-- ✅ Containerização com Docker e Docker Compose
-- ✅ Código limpo e organizado
-
----
-
-## 🔄 Próximos Passos (Futuras Melhorias)
-
-- [x] ~~Configurar e testar PostgreSQL em ambiente local~~ ✅ **Concluído** - PostgreSQL configurado com Docker e Docker Compose
-- [x] Implementação do Flyway ✅ **Concluído**
-- [ ] Autenticação e autorização (JWT)
-- [ ] Testes unitários e de integração
-- [ ] Paginação e ordenação nas listagens
-- [ ] Filtros e busca avançada
-- [ ] Upload de imagens para produtos
+- [x] PostgreSQL + Docker
+- [x] Flyway (migrations)
+- [x] Autenticação stateless com JWT
+- [x] Autorização baseada em roles (RBAC)
+- [ ] Testes unitários (Service Layer)
+- [ ] Testes de integração (Controller + MockMvc)
+- [ ] Pipeline CI com GitHub Actions
+- [ ] Paginação e ordenação
 - [ ] Cache com Redis
-- [ ] Logging estruturado
-- [ ] Deploy em cloud (Heroku/AWS)
-
----
-
-## 📝 Licença
-
-Este projeto foi desenvolvido para fins educacionais como parte do curso "Java COMPLETO" do Dr. Nelio Alves.
-
----
-
-## 🙏 Agradecimentos
-
-- **Dr. Nelio Alves** - Pelo excelente curso e conteúdo didático
-- **Udemy** - Pela plataforma de aprendizado
+- [ ] Deploy em cloud (AWS)
 
 ---
 
 ## 📧 Contato
 
 **Kleber Santos**  
-Recém formado em Análise e Desenvolvimento de Sistemas  
-Em busca de oportunidades como desenvolvedor backend júnior
+Desenvolvedor Backend Java  
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kleber-santos-577782273/)  
 **LinkedIn:** [linkedin.com/in/kleber-santos-577782273](https://www.linkedin.com/in/kleber-santos-577782273/)
